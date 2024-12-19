@@ -1,0 +1,23 @@
+stages:
+  - test
+  - build
+  - deploy
+
+variables:
+  NODE_ENV: production
+
+test:
+  stage: test
+  script:
+    - npm install
+    - npm test
+
+build:
+  stage: build
+  script:
+    - npm run build
+
+deploy:
+  stage: deploy
+  script:
+    - echo "Deploying backend to hosting provider"
