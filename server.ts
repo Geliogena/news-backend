@@ -6,12 +6,18 @@ import newsRoutes from "./routes/newsRoutes";
 import protectedRoutes from "./routes/protectedRoutes";
 import { Request, Response, NextFunction } from "express";
 import "dotenv/config";
+import cors from "cors";
 
 const app = express();
 
 
-app.use(express.json());
+app.use(cors({
+  origin: "http://localhost:5173", 
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}));
 
+app.use(express.json());
 
 app.use("/api/protected", protectedRoutes);
 app.use("/api/auth", authRoutes);

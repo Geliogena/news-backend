@@ -7,6 +7,12 @@ import { Router } from "express";
 
 const router = Router();
 
+router.get("/", (req, res) => {
+  res.json([
+    { id: 1, title: "Перша новина", text: "Текст першої новини" },
+    { id: 2, title: "Друга новина", text: "Текст другої новини" },
+  ]);
+});
 
 router.post("/", authMiddleware, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   const { title, text, genre } = req.body;
