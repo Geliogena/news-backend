@@ -1,23 +1,69 @@
-stages:
-  - test
-  - build
-  - deploy
+name: CI/CD Pipeline
 
-variables:
-  NODE_ENV: production
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
-test:
-  stage: test
-  script:
-    - npm install
-    - npm test
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
 
-build:
-  stage: build
-  script:
-    - npm run build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-deploy:
-  stage: deploy
-  script:
-    - echo "Deploying backend to hosting provider"
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
+
+  build:
+    name: Build Application
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build
+
+      - name: Save build output
+        run: |
+          mkdir -p dist
+          cp -r ./dist ./artifact
+
+  deploy:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Deploy Application
+        env:
+          HOSTING_API_KEY: ${{ secrets.HOSTING_API_KEY }}
+        run: |
+          echo "Deploying to production"
