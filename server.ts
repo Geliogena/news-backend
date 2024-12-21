@@ -7,12 +7,14 @@ import protectedRoutes from "./routes/protectedRoutes";
 import { Request, Response, NextFunction } from "express";
 import "dotenv/config";
 import cors from "cors";
+import swaggerUi from "swagger-ui-express";
+import swaggerDocument from "./swagger-output.json"; 
 
 const app = express();
-
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(cors({
-  origin: "http://localhost:5173", 
+  origin: "*",
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
