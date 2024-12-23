@@ -1,10 +1,16 @@
+
+
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { AppDataSource } from "../config/data-source.js";
+import { AppDataSource } from "../config/data-source";
 import { User } from "../entities/User";
 
-const JWT_SECRET = process.env.JWT_SECRET || "default_secret_key";
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  throw new Error("JWT_SECRET не налаштовано в .env файлі");
+}
+
 const EMAIL_REGEX = /^\S+@\S+\.\S+$/;
 
 export class AuthController {
@@ -42,7 +48,7 @@ export class AuthController {
       await userRepository.save(newUser);
 
       
-      const token = jwt.sign({ email: newUser.email }, JWT_SECRET, { expiresIn: "1h" });
+      const token = jwt.sign({ id: newUser.id, email: newUser.email }, JWT_SECRET as string, { expiresIn: "1h" });
       return res.status(201).json({ token: `Bearer ${token}` });
     } catch (error) {
       console.error("Помилка реєстрації:", error);
@@ -54,6 +60,7 @@ export class AuthController {
     const { email, password } = req.body;
 
     try {
+      
       if (!email || !password) {
         return res.status(400).json({ message: "Всі поля є обов’язковими" });
       }
@@ -73,7 +80,9 @@ export class AuthController {
       }
 
       
-      const token = jwt.sign({ email: user.email }, JWT_SECRET, { expiresIn: "1h" });
+      const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET as string, { expiresIn: "1h" });
+      console.log("Згенерований токен:", token);
+
       return res.json({ token: `Bearer ${token}` });
     } catch (error) {
       console.error("Помилка входу:", error);

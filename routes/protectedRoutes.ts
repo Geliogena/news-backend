@@ -17,8 +17,11 @@ import { AuthenticatedRequest } from "../types/auth";
  */
 const router = express.Router();
 
-router.get("/", authMiddleware, (req: AuthenticatedRequest, res: Response) => {
+/*router.get("/", authMiddleware, (req: AuthenticatedRequest, res: Response) => {
   res.json({ message: "Це захищений маршрут", user: req.user });
+});*/
+router.get("/resource", authMiddleware, (req, res) => {
+  res.status(200).json({ message: "Успішний доступ до захищеного ресурсу" });
 });
 
 export default router;
