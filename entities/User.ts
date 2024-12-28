@@ -14,4 +14,10 @@ export class User {
 
   @OneToMany(() => Newspost, (newspost) => newspost.author)
   newsposts!: Newspost[];
+
+  @Column({ type: "boolean", default: true })
+  sendNotification!: boolean;
+
+  @Column({ type: "varchar", default: "log" }) 
+  notificationChannel!: "log" | "alert";
 }

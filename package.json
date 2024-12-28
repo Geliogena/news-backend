@@ -8,6 +8,10 @@
     "start": "npm run swagger && node dist/server.js",
     "dev": "npm run swagger && nodemon --watch '**/*.ts' --exec tsx server.ts",
     "swagger": "node ./node_modules/swagger-autogen ./swagger-output.json ./routes/*.ts",
+    "typeorm": "typeorm-ts-node-esm",
+    "migration:generate": "npm run typeorm -- migration:generate",
+    "migration:run": "npm run typeorm -- migration:run",
+    "migration:revert": "npm run typeorm -- migration:revert",
     "build": "tsc",
     "seed": "npx tsx seeds/seed.ts",
     "test": "node --experimental-vm-modules ./run-jest.mjs"
